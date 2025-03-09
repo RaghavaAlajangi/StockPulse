@@ -1,0 +1,92 @@
+/* Reset and Base Styles */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* AppShell Header */
+.mantine-AppShell-header {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(to right, #130d82, #3316d9, #320da1, #430666);
+  color: white;
+}
+
+/* Mantine Group in Header */
+.mantine-Group-root {
+  display: flex;
+  align-items: center;
+}
+
+/* AppShell Navbar */
+.mantine-AppShell-navbar {
+  width: 300px;
+  height: 100vh;
+  display: inline-block;
+  vertical-align: top;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* AppShell Main Content */
+.mantine-AppShell-main {
+  display: inline-block;
+  height: 100vh;
+  /* background: black; */
+  /* background: linear-gradient(to right, #130d82, #3316d9, #320da1, #430666); */
+  vertical-align: top;
+  width: calc(100% - 300px); /* Adjust width for navbar */
+  box-sizing: border-box;
+}
+
+/* Scroll Area */
+.mantine-ScrollArea-viewport {
+  height: 100%;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) { /* Tablets and smaller */
+  .mantine-AppShell-navbar {
+      width: 100%;
+      position: static; /* Remove fixed position */
+      height: auto; /* Allow auto height */
+      display: block; /* Stack navbar content */
+  }
+
+  .mantine-AppShell-main {
+      width: 100%; /* Full width on smaller screens */
+  }
+
+  .mantine-AppShell-header .mantine-Group-root {
+      flex-direction: column;
+      align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) { /* Phones */
+  .mantine-AppShell-header h1 {
+      font-size: 1.2em; /* Adjust title font size */
+  }
+
+  .mantine-AppShell-navbar {
+      padding: 10px; /* Reduce padding on small screens */
+  }
+}
+
+/* Adjustments for Zoom Levels */
+html {
+  font-size: 16px; /* Base font size */
+}
+
+@media (max-width: 600px) {
+  html {
+      font-size: 14px; /* Adjust font size on smaller viewports */
+  }
+}
+
