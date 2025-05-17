@@ -1,3 +1,5 @@
+0.1.0
+ - feat: Implement stock database and web scraper for financial data extraction
 0.0.1
  - enh: Add initial application structure and assets
  - project initiation
