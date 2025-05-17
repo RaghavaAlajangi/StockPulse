@@ -1,4 +1,5 @@
 import sqlite3
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -6,12 +7,13 @@ from .screener_headers import percentage_headers, ratio_headers, table_headers
 
 load_dotenv()
 
-DB_NAME = "stocks.db"
+DB_PATH = Path(__file__).resolve().parents[2] / "database" / "stocks.db"
 
 
 class StockDatabase:
     def __init__(self):
-        self.conn = sqlite3.connect(DB_NAME)
+        DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+        self.conn = sqlite3.connect(DB_PATH)
         self.cursor = self.conn.cursor()
         self.create_tables()
 
