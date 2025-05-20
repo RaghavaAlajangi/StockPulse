@@ -1,5 +1,6 @@
 import os
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
@@ -14,8 +15,6 @@ from .screener_headers import percentage_headers, ratio_headers, table_headers
 
 load_dotenv()
 
-DB_NAME = "stocks.db"
-
 
 class ScreenerWeb:
     def __init__(self):
@@ -28,23 +27,37 @@ class ScreenerWeb:
     def scrap_stock(self, screener_ticker):
         """Scrap stock data and store it in the database."""
         driver = self._screener_login()
-        web_url = f"https://www.screener.in/company/{screener_ticker}/"
-        driver.get(web_url)
-        time.sleep(4)
-        html = driver.page_source
-        soup = BeautifulSoup(html, "html.parser")
 
-        # Extract Data
-        self._extract_key_metrics(soup)
-        self._extract_tables(soup)
-        self._extract_percentage_tables(soup)
+        ticker_list = (
+            [screener_ticker]
+            if not isinstance(screener_ticker, list)
+            else screener_ticker
+        )
 
-        # Store Data in DB
-        self.db.save_db(screener_ticker, self.stock_data)
+        for st in ticker_list:
+            web_url = f"https://www.screener.in/company/{st}/"
+            driver.get(web_url)
+            time.sleep(4)
+            html = driver.page_source
+            soup = BeautifulSoup(html, "html.parser")
+
+            self.stock_data = {"tables": {}}
+
+            # Parallelize data extraction where possible
+            with ThreadPoolExecutor() as executor:
+                executor.submit(self._extract_key_metrics, soup)
+                executor.submit(self._extract_tables, soup)
+                executor.submit(self._extract_percentage_tables, soup)
+
+            # Store Data in DB
+            self.db.save_db(st, self.stock_data)
+        driver.close()
 
     def _screener_login(self):
         chrome_options = Options()
-        chrome_options.add_argument("--start-maximized")
+        chrome_options.add_argument("--headless=new")  # New headless mode
+        chrome_options.add_argument("--disable-gpu")  # Disable GPU hardware
+        chrome_options.add_argument("--window-size=1920,1080")  # Set window
         driver = webdriver.Chrome(options=chrome_options)
         driver.get(self.login_url)
         WebDriverWait(driver, 10).until(
