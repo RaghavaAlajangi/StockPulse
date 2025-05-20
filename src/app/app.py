@@ -1,5 +1,5 @@
 import dash_mantine_components as dmc
-from dash import MATCH, Dash, Input, Output, _dash_renderer, callback
+from dash import MATCH, Dash, Input, Output, State, _dash_renderer, callback
 from dash import callback_context as ctx
 from dash import clientside_callback, html, no_update
 from dash_iconify import DashIconify
@@ -78,34 +78,6 @@ def app_sidebar():
         children=[
             html.Div(
                 children=[
-                    html.Div(
-                        style={
-                            "display": "flex",
-                            "align-items": "flex-end",
-                            "gap": "5px",  # Space between items
-                        },
-                        children=[
-                            dmc.TagsInput(
-                                label="Enter Stock Name",
-                                placeholder="Valid stocks all you like!",
-                                required=True,
-                                id="scrape_text",
-                                clearable=True,
-                                style={
-                                    "flexGrow": 1
-                                },  # Allow text input to grow
-                            ),
-                            dmc.Button(
-                                "Fetch",
-                                id="scrape_click",
-                                variant="outline",
-                                leftSection=get_icon(
-                                    "fluent:database-plug-connected-20-filled"
-                                ),
-                            ),
-                            html.Div(id="notifications_container"),
-                        ],
-                    ),
                     dmc.NavLink(
                         label="Home",
                         leftSection=get_icon(icon="bi:house-door-fill"),
@@ -151,17 +123,43 @@ def app_sidebar():
                         ],
                     ),
                     dmc.NavLink(
-                        label="Screener",
-                        leftSection=get_icon(icon="mingcute:filter-line"),
-                    ),
-                    dmc.NavLink(
                         label="Database",
                         leftSection=get_icon(icon="octicon:database-16"),
+                        children=[
+                            html.Div(
+                                style={
+                                    "display": "flex",
+                                    "align-items": "flex-end",
+                                    "gap": "5px",  # Space between items
+                                },
+                                children=[
+                                    dmc.TagsInput(
+                                        label="Scrape Stock",
+                                        placeholder="NSE or BSE Stock ID",
+                                        required=True,
+                                        id="scrape_text",
+                                        clearable=True,
+                                        style={
+                                            "flexGrow": 1
+                                        },  # Allow text input to grow
+                                    ),
+                                    dmc.Button(
+                                        "Fetch",
+                                        id="scrape_click",
+                                        variant="outline",
+                                        disabled=False,
+                                        rightSection=get_icon(
+                                            "mdi:download-circle"
+                                        ),
+                                    ),
+                                    html.Div(id="notifications_container"),
+                                ],
+                            ),
+                        ],
                     ),
                     dmc.NavLink(
-                        label="Disabled",
-                        leftSection=get_icon(icon="tabler:circle-off"),
-                        disabled=True,
+                        label="Screener",
+                        leftSection=get_icon(icon="mingcute:filter-line"),
                     ),
                 ],
             )
@@ -278,13 +276,25 @@ clientside_callback(
 
 
 @callback(
+    Output("scrape_click", "disabled"),
+    Input("scrape_text", "value"),
+    State("scrape_click", "disabled"),
+)
+def toggle_scrape_button(stock_list, click_enabled):
+    if stock_list and len(stock_list) > 0:
+        return not click_enabled
+    return no_update, no_update
+
+
+@callback(
     Output("notifications_container", "children"),
+    Output("scrape_text", "value"),
     Output("scrape_click", "loading"),
     Input("scrape_text", "value"),
     Input("scrape_click", "n_clicks"),
     prevent_initial_call=True,
 )
-def scrape_stcok_data(stock_list, sclick):
+def scrape_stock_data(stock_list, sclick):
     button_id = ctx.triggered_id
     web = ScreenerWeb()
     if button_id and stock_list:
@@ -299,10 +309,11 @@ def scrape_stcok_data(stock_list, sclick):
                     icon=DashIconify(icon="ic:round-celebration"),
                     position="bottom-right",
                 ),
+                None,
                 False,
             )
 
-    return no_update, no_update
+    return no_update, no_update, no_update
 
 
 def run_app(local=True, host="0.0.0.0", port=100):
