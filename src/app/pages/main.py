@@ -1,3 +1,4 @@
+import dash_ag_grid as dag
 import dash_mantine_components as dmc
 
 
@@ -9,6 +10,13 @@ def main_layout():
                 # w=350,
                 children=[
                     dmc.Title("Stocks Grid", order=2),
+                    dag.AgGrid(
+                        id="raw_",
+                        columnDefs=[],
+                        rowData=[],
+                        dashGridOptions={"domLayout": "autoHeight"},
+                        style={"height": "300px", "width": "100%"},
+                    ),
                 ],
             ),
         ],
