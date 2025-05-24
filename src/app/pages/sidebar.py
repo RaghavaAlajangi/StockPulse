@@ -72,11 +72,12 @@ def sidebar():
                                         id="scrape_text",
                                         clearable=True,
                                         style={
-                                            "flexGrow": 1
+                                            "flexGrow": 1,
+                                            "width": "200px",
                                         },  # Allow text input to grow
                                     ),
                                     dmc.Button(
-                                        "Fetch",
+                                        "Scrape",
                                         id="scrape_click",
                                         variant="outline",
                                         disabled=False,
@@ -98,9 +99,8 @@ def sidebar():
         ],
         p="md",
         style={
-            "width": "450px",
-            # "background": "#16121c",
-            # "color": "white",
+            # When you change the width, also change the width in dmc.AppShell
+            "width": "400px",
             "padding": "20px",
             "height": "100vh",
             "display": "inline-block",
