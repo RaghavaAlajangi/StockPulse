@@ -1,11 +1,10 @@
 import dash_mantine_components as dmc
 from dash import MATCH, Dash, Input, Output, State, _dash_renderer, callback
 from dash import callback_context as ctx
-from dash import clientside_callback, html, no_update
-from dash_iconify import DashIconify
+from dash import clientside_callback, no_update
 
 from ..data import ScreenerWeb
-from .elements import get_icon, toggle_theme
+from .pages import header, main_layout, sidebar
 
 _dash_renderer._set_react_version("18.2.0")
 
@@ -13,220 +12,11 @@ app = Dash(external_stylesheets=dmc.styles.ALL)
 app._favicon = "icon.svg"
 
 
-def app_header():
-    return dmc.AppShellHeader(
-        dmc.Group(
-            [
-                dmc.Group(
-                    [
-                        dmc.Image(src="assets/icon.svg", h=35),
-                        dmc.Title("StockPulse", c="white"),
-                    ],
-                    h="100%",
-                    px="md",
-                ),
-                dmc.Group(
-                    [
-                        toggle_theme(),
-                        dmc.Avatar(
-                            DashIconify(
-                                icon="mingcute:user-4-fill",
-                                color="white",
-                                width=33,
-                                height=33,
-                            ),
-                            variant="transparent",
-                            radius="md",
-                            size="md",
-                        ),
-                        dmc.Avatar(
-                            DashIconify(
-                                icon="octicon:mark-github-24",
-                                color="white",
-                                width=30,
-                                height=30,
-                            ),
-                            variant="transparent",
-                            radius="md",
-                            size="md",
-                        ),
-                    ],
-                    h="100%",
-                    px="md",
-                ),
-            ],
-            justify="space-between",
-            style={"flex": 1},
-            h="100%",
-            px="md",
-        ),
-        style={
-            "background": "linear-gradient(to right, #130d82, #3316d9,"
-            "#320da1, #430666)",
-            "color": "white",
-            "padding": "10px",
-            "display": "flex",
-            "alignItems": "center",
-            "justifyContent": "space-between",
-        },
-    )
-
-
-def app_sidebar():
-    return dmc.AppShellNavbar(
-        id="navbar",
-        children=[
-            html.Div(
-                children=[
-                    dmc.NavLink(
-                        label="Home",
-                        leftSection=get_icon(icon="bi:house-door-fill"),
-                    ),
-                    dmc.NavLink(
-                        label="Wishlists",
-                        leftSection=get_icon(icon="mingcute:heartbeat-2-line"),
-                        rightSection=get_icon(icon="tabler-chevron-right"),
-                        children=[
-                            dmc.NavLink(
-                                label="Wishlist 1",
-                                leftSection=get_icon(
-                                    icon="mingcute:heartbeat-2-line"
-                                ),
-                            ),
-                            dmc.NavLink(
-                                label="Wishlist 2",
-                                leftSection=get_icon(
-                                    icon="mingcute:heartbeat-2-line"
-                                ),
-                            ),
-                            dmc.NavLink(
-                                label="Wishlist 3",
-                                leftSection=get_icon(
-                                    icon="mingcute:heartbeat-2-line"
-                                ),
-                            ),
-                        ],
-                    ),
-                    dmc.NavLink(
-                        label="Portfolios",
-                        leftSection=get_icon(icon="octicon:repo-24"),
-                        rightSection=get_icon(icon="tabler-chevron-right"),
-                        children=[
-                            dmc.NavLink(
-                                label="Portfolio 1",
-                                leftSection=get_icon(icon="octicon:repo-24"),
-                            ),
-                            dmc.NavLink(
-                                label="Portfolio 2",
-                                leftSection=get_icon(icon="octicon:repo-24"),
-                            ),
-                        ],
-                    ),
-                    dmc.NavLink(
-                        label="Database",
-                        leftSection=get_icon(icon="octicon:database-16"),
-                        children=[
-                            html.Div(
-                                style={
-                                    "display": "flex",
-                                    "align-items": "flex-end",
-                                    "gap": "5px",  # Space between items
-                                },
-                                children=[
-                                    dmc.TagsInput(
-                                        label="Scrape Stock",
-                                        placeholder="NSE or BSE Stock ID",
-                                        required=True,
-                                        id="scrape_text",
-                                        clearable=True,
-                                        style={
-                                            "flexGrow": 1
-                                        },  # Allow text input to grow
-                                    ),
-                                    dmc.Button(
-                                        "Fetch",
-                                        id="scrape_click",
-                                        variant="outline",
-                                        disabled=False,
-                                        rightSection=get_icon(
-                                            "mdi:download-circle"
-                                        ),
-                                    ),
-                                    html.Div(id="notifications_container"),
-                                ],
-                            ),
-                        ],
-                    ),
-                    dmc.NavLink(
-                        label="Screener",
-                        leftSection=get_icon(icon="mingcute:filter-line"),
-                    ),
-                ],
-            )
-        ],
-        p="md",
-        style={
-            "width": "450px",
-            # "background": "#16121c",
-            # "color": "white",
-            "padding": "20px",
-            "height": "100vh",
-            "display": "inline-block",
-            "verticalAlign": "top",
-        },
-    )
-
-
-def app_main():
-    return dmc.AppShellMain(
-        children=[
-            # dmc.ScrollArea(
-            #     # h=250,
-            #     # w=350,
-            #     children=[
-            #         html.Div(
-            #             [
-            #                 dmc.Title("Stocks List", order=2),
-            #             ]
-            #         ),
-            #         dmc.Accordion(
-            #             id="accordion-compose-controls",
-            #             chevronPosition="left",
-            #             children=[
-            #                 dmc.AccordionItem(
-            #                     [
-            #                         make_control(f"{i}", f"action-{i}"),
-            #                         dmc.AccordionPanel(
-            #                             dmc.ScrollArea(
-            #                                 h=400,
-            #                                 children=[dummy_tabs()],
-            #                             ),
-            #                         ),
-            #                     ],
-            #                     value=f"item-{i}",
-            #                 )
-            #                 for i in data.keys()
-            #             ],
-            #             variant="separated",
-            #         ),
-            #     ],
-            # ),
-        ],
-        style={
-            # "background": "#211b1b",
-            # "padding": "20px",
-            "display": "inline-block",
-            "height": "100vh",
-            "verticalAlign": "top",
-        },
-    )
-
-
 layout = dmc.AppShell(
     [
-        app_header(),
-        app_sidebar(),
-        app_main(),
+        header(),
+        sidebar(),
+        main_layout(),
     ],
     header={"height": 80},
     padding="md",
@@ -287,7 +77,6 @@ def toggle_scrape_button(stock_list, click_enabled):
 
 
 @callback(
-    Output("notifications_container", "children"),
     Output("scrape_text", "value"),
     Output("scrape_click", "loading"),
     Input("scrape_text", "value"),
@@ -301,19 +90,11 @@ def scrape_stock_data(stock_list, sclick):
         if "scrape_click" in button_id:
             web.scrap_stock(stock_list)
             return (
-                dmc.Notification(
-                    title="Data Scraped!",
-                    id="scrape_notify",
-                    action="show",
-                    message="Stocks data have been stored in DB!",
-                    icon=DashIconify(icon="ic:round-celebration"),
-                    position="bottom-right",
-                ),
                 None,
                 False,
             )
 
-    return no_update, no_update, no_update
+    return no_update, no_update
 
 
 def run_app(local=True, host="0.0.0.0", port=100):
