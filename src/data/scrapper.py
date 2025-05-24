@@ -10,8 +10,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+from .meta import percentage_headers, ratio_headers, table_headers
 from .saver import StockDatabase
-from .screener_headers import percentage_headers, ratio_headers, table_headers
 
 load_dotenv()
 

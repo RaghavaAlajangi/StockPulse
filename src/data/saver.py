@@ -3,7 +3,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from .screener_headers import (
+from .meta import (
     db_table_names,
     percentage_headers,
     ratio_headers,
