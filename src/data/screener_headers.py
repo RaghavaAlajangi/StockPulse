@@ -42,3 +42,16 @@ table_headers = {
     "Ratios": "ratios",
     "Shareholding Pattern": "shareholding_pattern",
 }
+
+db_table_names = [
+    "stock_names",
+    "key_metrics",
+    "peer_comparision",
+    "quarterly_results",
+    "profit_loss",
+    "stock_percentages",
+    "balance_sheet",
+    "cash_flow",
+    "ratios",
+    "shareholding_pattern",
+]

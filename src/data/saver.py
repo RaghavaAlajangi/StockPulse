@@ -3,7 +3,12 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from .screener_headers import percentage_headers, ratio_headers, table_headers
+from .screener_headers import (
+    db_table_names,
+    percentage_headers,
+    ratio_headers,
+    table_headers,
+)
 
 load_dotenv()
 
@@ -20,8 +25,8 @@ class StockDatabase:
     def create_tables(self):
         """Create necessary tables to store stock data."""
         self.cursor.execute(
-            """
-            CREATE TABLE IF NOT EXISTS stock_names (
+            f"""
+            CREATE TABLE IF NOT EXISTS {db_table_names[0]} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             ticker TEXT UNIQUE,
             last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -29,8 +34,8 @@ class StockDatabase:
             """
         )
         self.cursor.execute(
-            """
-            CREATE TABLE IF NOT EXISTS key_metrics (
+            f"""
+            CREATE TABLE IF NOT EXISTS {db_table_names[1]} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             stock_id INTEGER,
             metric_name TEXT,
@@ -41,8 +46,8 @@ class StockDatabase:
             """
         )
         self.cursor.execute(
-            """
-            CREATE TABLE IF NOT EXISTS peer_comparision (
+            f"""
+            CREATE TABLE IF NOT EXISTS {db_table_names[2]} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             stock_id INTEGER,
             peer_name TEXT,
@@ -54,8 +59,8 @@ class StockDatabase:
             """
         )
         self.cursor.execute(
-            """
-            CREATE TABLE IF NOT EXISTS quarterly_results (
+            f"""
+            CREATE TABLE IF NOT EXISTS {db_table_names[3]} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             stock_id INTEGER,
             category TEXT,
@@ -67,8 +72,8 @@ class StockDatabase:
             """
         )
         self.cursor.execute(
-            """
-            CREATE TABLE IF NOT EXISTS profit_loss (
+            f"""
+            CREATE TABLE IF NOT EXISTS {db_table_names[4]} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             stock_id INTEGER,
             category TEXT,
@@ -80,8 +85,8 @@ class StockDatabase:
             """
         )
         self.cursor.execute(
-            """
-            CREATE TABLE IF NOT EXISTS stock_percentages (
+            f"""
+            CREATE TABLE IF NOT EXISTS {db_table_names[5]} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             stock_id INTEGER,
             metric TEXT,
@@ -93,8 +98,8 @@ class StockDatabase:
             """
         )
         self.cursor.execute(
-            """
-            CREATE TABLE IF NOT EXISTS balance_sheet (
+            f"""
+            CREATE TABLE IF NOT EXISTS {db_table_names[6]} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             stock_id INTEGER,
             category TEXT,
@@ -106,8 +111,8 @@ class StockDatabase:
             """
         )
         self.cursor.execute(
-            """
-            CREATE TABLE IF NOT EXISTS cash_flow (
+            f"""
+            CREATE TABLE IF NOT EXISTS {db_table_names[7]} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             stock_id INTEGER,
             category TEXT,
@@ -119,8 +124,8 @@ class StockDatabase:
             """
         )
         self.cursor.execute(
-            """
-            CREATE TABLE IF NOT EXISTS ratios (
+            f"""
+            CREATE TABLE IF NOT EXISTS {db_table_names[8]} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             stock_id INTEGER,
             category TEXT,
@@ -132,8 +137,8 @@ class StockDatabase:
             """
         )
         self.cursor.execute(
-            """
-            CREATE TABLE IF NOT EXISTS shareholding_pattern (
+            f"""
+            CREATE TABLE IF NOT EXISTS {db_table_names[9]} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             stock_id INTEGER,
             category TEXT,
